@@ -5,13 +5,19 @@ SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://devhelper:secretpassword@postgre
 
 engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,
-    echo=True 
+    echo=True
 )
 
 AsyncSessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False
 )
 
 Base = declarative_base()
+
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
