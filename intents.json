@@ -9,7 +9,9 @@
       {
         "tag": "solid",
         "patterns": ["princípios solid", "boas práticas OO", "design patterns"],
-        "responses": ["SOLID: Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion."]
+        "responses": ["SOLID: Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion."],
+        "code_example": "Exemplo de código ilustrando um princípio SOLID..."
+        
       }
     ]
   }

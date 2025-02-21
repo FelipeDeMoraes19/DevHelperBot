@@ -3,8 +3,6 @@ import nltk
 from nltk.stem import PorterStemmer
 from typing import Dict, Any
 
-nltk.download('punkt')
-
 class NLPProcessor:
     def __init__(self):
         self.stemmer = PorterStemmer()
@@ -20,12 +18,13 @@ class NLPProcessor:
         
         for intent in self.intents['intents']:
             for pattern in intent['patterns']:
-                if any(ps.stem(word) in stemmed for word in pattern.split()):
+                if any(self.stemmer.stem(word) in stemmed for word in pattern.split()):
                     return {
                         "intent": intent['tag'],
                         "response": intent['responses'][0],
                         "code_example": intent.get('code_example', '')
                     }
+        
         return {
             "intent": "unknown",
             "response": "Não entendi. Pode reformular?",

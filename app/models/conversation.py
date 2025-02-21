@@ -10,3 +10,4 @@ class Conversation(Base):
     user_input = Column(String(500))
     bot_response = Column(String(500))
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    code_example = Column(String(2000))
