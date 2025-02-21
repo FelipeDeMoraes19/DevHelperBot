@@ -1,0 +1,15 @@
+{
+    "intents": [
+      {
+        "tag": "oop",
+        "patterns": ["orientação a objetos", "classe vs objeto", "herança"],
+        "responses": ["OOP é um paradigma que organiza o software em objetos. Principais conceitos: Encapsulamento, Herança e Polimorfismo."],
+        "code_example": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Dog(Animal):\n    def bark(self):\n        print('Woof!')"
+      },
+      {
+        "tag": "solid",
+        "patterns": ["princípios solid", "boas práticas OO", "design patterns"],
+        "responses": ["SOLID: Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion."]
+      }
+    ]
+  }
