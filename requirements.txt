@@ -5,3 +5,5 @@ asyncpg
 python-dotenv
 redis
 nltk
+passlib[bcrypt]
+python-jose[cryptography]

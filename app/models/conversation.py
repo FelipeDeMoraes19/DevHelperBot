@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.config.database import Base
 
 class Conversation(Base):
@@ -11,3 +12,7 @@ class Conversation(Base):
     bot_response = Column(String(500))
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     code_example = Column(String(2000))
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+
+    user = relationship("User", backref="conversations")
