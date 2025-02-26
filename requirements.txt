@@ -7,3 +7,6 @@ redis
 nltk
 passlib[bcrypt]
 python-jose[cryptography]
+pytest
+pytest-asyncio
+httpx

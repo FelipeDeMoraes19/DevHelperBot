@@ -50,9 +50,6 @@ async def list_conversations(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """
-    Retorna o histórico de conversas do usuário autenticado.
-    """
     rows = await db.execute(
         "SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC",
         {"user_id": current_user.id}
