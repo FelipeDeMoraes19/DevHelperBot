@@ -25,7 +25,6 @@ async def chat_endpoint(
         
         new_conversation = Conversation(
             session_id=request.session_id,
-            session_id="N/A",
             user_input=request.user_input,
             bot_response=processed["response"],
             code_example=processed.get("code_example", ""),
@@ -44,3 +43,30 @@ async def chat_endpoint(
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+@router.get("/conversations")
+async def list_conversations(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Retorna o histórico de conversas do usuário autenticado.
+    """
+    rows = await db.execute(
+        "SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC",
+        {"user_id": current_user.id}
+    )
+    convos = rows.fetchall()
+
+    result = []
+    for row in convos:
+        result.append({
+            "id": row.id,
+            "session_id": row.session_id,
+            "user_input": row.user_input,
+            "bot_response": row.bot_response,
+            "code_example": row.code_example,
+            "timestamp": row.timestamp.isoformat() if row.timestamp else None
+        })
+    return result
