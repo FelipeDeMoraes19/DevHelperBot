@@ -1,5 +1,6 @@
 import asyncio
 from app.config.database import Base, engine
+from app.models import feedback
 
 async def init_db():
     async with engine.begin() as conn:
