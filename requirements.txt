@@ -10,3 +10,5 @@ python-jose[cryptography]
 pytest
 pytest-asyncio
 httpx
+scikit-learn
+joblib
