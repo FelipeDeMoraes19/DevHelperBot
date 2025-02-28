@@ -3,16 +3,19 @@ from typing import Annotated
 from pydantic import BaseModel
 from app.nlp.processor import NLPProcessor
 from app.models.conversation import Conversation
-from app.config.database import AsyncSessionLocal, get_db
+from app.config.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.dependencies import get_current_user
+from sqlalchemy import text
 
 router = APIRouter()
 nlp = NLPProcessor()
 
+
 class ChatRequest(BaseModel):
     user_input: str
     session_id: str
+
 
 @router.post("/chat")
 async def chat_endpoint(
@@ -22,7 +25,7 @@ async def chat_endpoint(
 ):
     try:
         processed = nlp.process_input(request.user_input)
-        
+
         new_conversation = Conversation(
             session_id=request.session_id,
             user_input=request.user_input,
@@ -30,20 +33,20 @@ async def chat_endpoint(
             code_example=processed.get("code_example", ""),
             user_id=current_user.id
         )
-        
+
         db.add(new_conversation)
         await db.commit()
-        
+
         return {
             "response": processed["response"],
             "code_example": processed.get("code_example", ""),
             "intent": processed["intent"]
         }
-    
+
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 
 @router.get("/conversations")
 async def list_conversations(
@@ -51,7 +54,7 @@ async def list_conversations(
     current_user: dict = Depends(get_current_user),
 ):
     rows = await db.execute(
-        "SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC",
+        text("SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC"),
         {"user_id": current_user.id}
     )
     convos = rows.fetchall()

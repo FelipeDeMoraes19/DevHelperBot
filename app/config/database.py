@@ -1,11 +1,17 @@
+import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import NullPool
 
-SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_db"
+def get_database_url():
+    if os.getenv("ENV") == "testing":
+        return "postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_test"
+    return "postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_db"
 
 engine = create_async_engine(
-    SQLALCHEMY_DATABASE_URL,
-    echo=True
+    get_database_url(),
+    echo=True,
+    poolclass=NullPool if os.getenv("ENV") == "testing" else None
 )
 
 AsyncSessionLocal = sessionmaker(

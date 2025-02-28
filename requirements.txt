@@ -9,6 +9,11 @@ passlib[bcrypt]
 python-jose[cryptography]
 pytest
 pytest-asyncio
-httpx
+httpx>=0.24.0
 scikit-learn
 joblib
+pydantic[email]
+email-validator
+pytest-xdist
+psycopg2-binary
+asgi-lifespan>=1.0.1

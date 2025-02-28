@@ -34,12 +34,14 @@ services:
       redis:
         condition: service_started
     environment:
-      - DATABASE_URL=postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_db
+      - ENV=testing
+      - DATABASE_URL=postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_test
       - REDIS_URL=redis://redis:6379/0
       - PYTHONPATH=/app
     command: >
       sh -c "python -m scripts.create_db &&
-             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+            pytest tests/ -n 1 &&
+            uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 
 volumes:
   postgres_data:

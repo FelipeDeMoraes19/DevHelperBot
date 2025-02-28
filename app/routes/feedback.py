@@ -1,17 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.dependencies import get_current_user
 from app.config.database import get_db
 from app.models.feedback import Feedback
 from app.models.conversation import Conversation
+from sqlalchemy import text
 
 router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
+
 class FeedbackCreate(BaseModel):
     conversation_id: int
-    rating: int 
+    rating: int
+
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_feedback(
@@ -20,13 +22,14 @@ async def create_feedback(
     current_user: dict = Depends(get_current_user),
 ):
     conversation = await db.execute(
-        "SELECT * FROM conversations WHERE id=:id AND user_id=:user_id",
+        text("SELECT * FROM conversations WHERE id = :id AND user_id = :user_id"),
         {"id": data.conversation_id, "user_id": current_user.id}
     )
     row = conversation.fetchone()
     if not row:
         raise HTTPException(
-            status_code=404, detail="Conversation not found or doesn't belong to you"
+            status_code=404,
+            detail="Conversation not found or doesn't belong to you"
         )
 
     new_feedback = Feedback(
@@ -37,6 +40,7 @@ async def create_feedback(
     await db.commit()
     await db.refresh(new_feedback)
     return {"msg": "Feedback saved", "feedback_id": new_feedback.id}
+
 
 @router.get("/")
 async def list_feedback(
@@ -50,7 +54,10 @@ async def list_feedback(
     WHERE c.user_id = :user_id
     ORDER BY f.id DESC
     """
-    results = await db.execute(sql, {"user_id": current_user.id})
+    results = await db.execute(
+        text(sql),
+        {"user_id": current_user.id}
+    )
     rows = results.fetchall()
 
     feedback_list = []
