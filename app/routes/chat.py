@@ -1,3 +1,4 @@
+from sqlalchemy import text
 from fastapi import APIRouter, Depends, HTTPException, Body
 from typing import Annotated
 from pydantic import BaseModel
@@ -54,9 +55,10 @@ async def list_conversations(
     current_user: dict = Depends(get_current_user),
 ):
     rows = await db.execute(
-        text("SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC"),
+        text("SELECT * FROM conversations WHERE user_id = :user_id ORDER BY id DESC"), 
         {"user_id": current_user.id}
     )
+
     convos = rows.fetchall()
 
     result = []

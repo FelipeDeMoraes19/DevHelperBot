@@ -22,7 +22,7 @@ async def create_feedback(
     current_user: dict = Depends(get_current_user),
 ):
     conversation = await db.execute(
-        text("SELECT * FROM conversations WHERE id = :id AND user_id = :user_id"),
+        text("SELECT * FROM conversations WHERE id = :id AND user_id = :user_id"), 
         {"id": data.conversation_id, "user_id": current_user.id}
     )
     row = conversation.fetchone()
@@ -55,7 +55,13 @@ async def list_feedback(
     ORDER BY f.id DESC
     """
     results = await db.execute(
-        text(sql),
+        text("""
+        SELECT f.id, f.conversation_id, f.rating, f.created_at
+        FROM feedback f
+        JOIN conversations c ON c.id = f.conversation_id
+        WHERE c.user_id = :user_id
+        ORDER BY f.id DESC
+        """), 
         {"user_id": current_user.id}
     )
     rows = results.fetchall()

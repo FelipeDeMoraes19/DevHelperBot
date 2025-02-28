@@ -29,9 +29,10 @@ class UserLogin(BaseModel):
 @router.post("/register")
 async def register_user(user_data: UserRegister, db: AsyncSession = Depends(get_db)):
     existing_user = await db.execute(
-        text("SELECT * FROM users WHERE email = :email OR username = :username LIMIT 1"),
+        text("SELECT * FROM users WHERE email = :email OR username = :username LIMIT 1"), 
         {"email": user_data.email, "username": user_data.username}
     )
+
     if existing_user.fetchone():
         raise HTTPException(
             status_code=400,
@@ -53,7 +54,7 @@ async def register_user(user_data: UserRegister, db: AsyncSession = Depends(get_
 @router.post("/login")
 async def login_user(login_data: UserLogin, db: AsyncSession = Depends(get_db)):
     user = await db.execute(
-        text("SELECT * FROM users WHERE email = :email LIMIT 1"),
+        text("SELECT * FROM users WHERE email = :email LIMIT 1"),  
         {"email": login_data.email}
     )
     user_row = user.fetchone()
