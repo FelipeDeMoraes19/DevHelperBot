@@ -22,7 +22,6 @@ O DevHelperBot é uma API especializada em ajudar desenvolvedores com conceitos 
 - **Sistema de Feedback** para avaliação de respostas
 - **Banco de Dados Assíncrono** com PostgreSQL
 - **Dockerização** completa do ambiente
-- **Documentação API** automática (Swagger/Redoc)
 - **Testes Automatizados** com pytest
 
 ## 🛠 Tecnologias Utilizadas
@@ -58,17 +57,6 @@ docker-compose up --build
 - DATABASE_URL=postgresql+asyncpg://devhelper:secretpassword@postgres:5432/devhelper_db
 - REDIS_URL=redis://redis:6379/0
 - SECRET_KEY=SUPERSECRETJWTKEY
-
-
-
-### 📚 Documentação da API
-
-## Acesse a documentação interativa:
-
-- Swagger UI: http://localhost:8000/docs
-
-- ReDoc: http://localhost:8000/redoc
-
 
 ### 🧪 Testes
 
